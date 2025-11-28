@@ -23,10 +23,6 @@ digraph ClassDependencies {
     "DependencyInjectionDemo.Services.Cart.CartService" -> "DependencyInjectionDemo.Services.Catalog.ICatalogService";
     "DependencyInjectionDemo.Services.Cart.CartService" -> "DependencyInjectionDemo.Services.Payment.IPaymentService";
     "DependencyInjectionDemo.Services.Payment.PaymentService" -> "DependencyInjectionDemo.Services.Payment.Providers.IPaymentProvider";
-    "DependencyInjectionDemo.Program" -> "DependencyInjectionDemo.Services.Catalog.Data.Repositories.ProductRepository";
-    "DependencyInjectionDemo.Program" -> "DependencyInjectionDemo.Services.Catalog.CatalogService";
-    "DependencyInjectionDemo.Program" -> "DependencyInjectionDemo.Services.Payment.PaymentService";
-    "DependencyInjectionDemo.Program" -> "DependencyInjectionDemo.Services.Cart.CartService";
     "DependencyInjectionDemo.Services.Catalog.CatalogService" -> "DependencyInjectionDemo.Services.Catalog.ICatalogService" [arrowhead="empty", style="dashed"];
     "DependencyInjectionDemo.Services.Payment.Providers.PaypalPaymentProvider" -> "DependencyInjectionDemo.Services.Payment.Providers.IPaymentProvider" [arrowhead="empty", style="dashed"];
     "DependencyInjectionDemo.Services.Catalog.Data.Repositories.ProductRepository" -> "DependencyInjectionDemo.Services.Catalog.Data.Repositories.IProductRepository" [arrowhead="empty", style="dashed"];
