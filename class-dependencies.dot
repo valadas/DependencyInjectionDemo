@@ -1,7 +1,8 @@
 digraph ClassDependencies {
     rankdir=LR;
     node [shape=box, style=rounded, fontname="Arial"];
-        "DependencyInjectionDemo.Services.Payment.Providers.PaypalPaymentProvider" [label="PaypalPaymentProvider"];
+        "DependencyInjectionDemo.Services.Catalog.Data.Repositories.IProductRepository" [label="IProductRepository", style="dashed,rounded", fontname="Arial Italic", color="blue", fontcolor="blue"];
+    "DependencyInjectionDemo.Services.Payment.Providers.PaypalPaymentProvider" [label="PaypalPaymentProvider"];
     "DependencyInjectionDemo.Services.Payment.Providers.AuthorizeNetPaymentProvider" [label="AuthorizeNetPaymentProvider"];
     "DependencyInjectionDemo.Services.Catalog.Data.ViewModels.ProductViewModel" [label="ProductViewModel"];
     "DependencyInjectionDemo.Program" [label="Program"];
@@ -13,15 +14,18 @@ digraph ClassDependencies {
     "DependencyInjectionDemo.Services.Catalog.CatalogService" [label="CatalogService"];
 
     "DependencyInjectionDemo.Services.Catalog.Data.ViewModels.ProductViewModel" -> "DependencyInjectionDemo.Services.Catalog.Data.Entiities.Product";
+    "DependencyInjectionDemo.Program" -> "DependencyInjectionDemo.Services.Catalog.Data.Repositories.ProductRepository";
     "DependencyInjectionDemo.Program" -> "DependencyInjectionDemo.Services.Catalog.CatalogService";
     "DependencyInjectionDemo.Program" -> "DependencyInjectionDemo.Services.Cart.CartService";
     "DependencyInjectionDemo.Services.Payment.PaymentService" -> "DependencyInjectionDemo.Services.Payment.Providers.IPaymentProvider";
     "DependencyInjectionDemo.Services.Catalog.Data.Repositories.ProductRepository" -> "DependencyInjectionDemo.Services.Catalog.Data.Entiities.Product";
+    "DependencyInjectionDemo.Services.Cart.CartService" -> "DependencyInjectionDemo.Services.Catalog.Data.Repositories.IProductRepository";
     "DependencyInjectionDemo.Services.Cart.CartService" -> "DependencyInjectionDemo.Services.Catalog.CatalogService";
     "DependencyInjectionDemo.Services.Cart.CartService" -> "DependencyInjectionDemo.Services.Payment.PaymentService";
+    "DependencyInjectionDemo.Services.Catalog.CatalogService" -> "DependencyInjectionDemo.Services.Catalog.Data.Repositories.IProductRepository";
     "DependencyInjectionDemo.Services.Catalog.CatalogService" -> "DependencyInjectionDemo.Services.Catalog.Data.ViewModels.ProductViewModel";
-    "DependencyInjectionDemo.Services.Catalog.CatalogService" -> "DependencyInjectionDemo.Services.Catalog.Data.Repositories.ProductRepository";
     "DependencyInjectionDemo.Services.Payment.Providers.PaypalPaymentProvider" -> "DependencyInjectionDemo.Services.Payment.Providers.IPaymentProvider" [arrowhead="empty", style="dashed"];
     "DependencyInjectionDemo.Services.Payment.Providers.AuthorizeNetPaymentProvider" -> "DependencyInjectionDemo.Services.Payment.Providers.IPaymentProvider" [arrowhead="empty", style="dashed"];
+    "DependencyInjectionDemo.Services.Catalog.Data.Repositories.ProductRepository" -> "DependencyInjectionDemo.Services.Catalog.Data.Repositories.IProductRepository" [arrowhead="empty", style="dashed"];
 }
 

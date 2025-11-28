@@ -1,14 +1,21 @@
 ﻿using DependencyInjectionDemo.Services.Catalog.Data.Repositories;
 using DependencyInjectionDemo.Services.Catalog.Data.ViewModels;
+using System.Runtime.CompilerServices;
 
 namespace DependencyInjectionDemo.Services.Catalog
 {
-    public class CatalogService
+    internal class CatalogService
     {
+        private readonly IProductRepository productRepository;
+
+        public CatalogService(IProductRepository productRepository)
+        {
+            this.productRepository = productRepository;
+        }
+
         public List<ProductViewModel> GetAllProducts()
         {
-            var repository = new ProductRepository();
-            var products = repository.GetAllProducts();
+            var products = this.productRepository.GetAllProducts();
             
             return products
                 .Select(p => new ProductViewModel(p))

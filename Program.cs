@@ -1,5 +1,6 @@
 ﻿using DependencyInjectionDemo.Services.Cart;
 using DependencyInjectionDemo.Services.Catalog;
+using DependencyInjectionDemo.Services.Catalog.Data.Repositories;
 
 namespace DependencyInjectionDemo
 {
@@ -7,8 +8,11 @@ namespace DependencyInjectionDemo
     {
         static void Main(string[] args)
         {
+            // Dependencies
+            IProductRepository productRepository = new ProductRepository();
+
             // Show the products from the catalog
-            var catalogService = new CatalogService();
+            var catalogService = new CatalogService(productRepository);
             var products = catalogService.GetAllProducts();
             foreach (var product in products)
             {
@@ -20,7 +24,7 @@ namespace DependencyInjectionDemo
             var input = Console.ReadLine();
 
             // Add the selected product to the cart.
-            var cartService = new CartService();
+            var cartService = new CartService(productRepository);
             if (int.TryParse(input, out int productId))
             {
                 cartService.AddProduct(productId);
