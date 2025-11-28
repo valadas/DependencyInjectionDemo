@@ -2,6 +2,7 @@
 using DependencyInjectionDemo.Services.Catalog;
 using DependencyInjectionDemo.Services.Catalog.Data.Repositories;
 using DependencyInjectionDemo.Services.Payment;
+using Microsoft.Extensions.Configuration;
 
 namespace DependencyInjectionDemo
 {
@@ -9,10 +10,17 @@ namespace DependencyInjectionDemo
     {
         static void Main(string[] args)
         {
+            // Configuration
+            // Build configuration from appsettings.json
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
             // Dependencies
             IProductRepository productRepository = new ProductRepository();
             ICatalogService catalogService = new CatalogService(productRepository);
-            IPaymentService paymentService = new PaymentService();
+            IPaymentService paymentService = new PaymentService(configuration);
 
             // Show the products from the catalog
             var products = catalogService.GetAllProducts();
