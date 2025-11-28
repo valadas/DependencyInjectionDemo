@@ -1,5 +1,8 @@
 ﻿using DependencyInjectionDemo.Services.Cart;
 using DependencyInjectionDemo.Services.Catalog;
+using DependencyInjectionDemo.Services.Catalog.Data.Repositories;
+using DependencyInjectionDemo.Services.Payment;
+using Microsoft.Extensions.Configuration;
 
 namespace DependencyInjectionDemo
 {
@@ -7,8 +10,20 @@ namespace DependencyInjectionDemo
     {
         static void Main(string[] args)
         {
+            // Configuration
+            // Build configuration from appsettings.json
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            // Dependencies
+            IProductRepository productRepository = new ProductRepository();
+            ICatalogService catalogService = new CatalogService(productRepository);
+            IPaymentService paymentService = new PaymentService(configuration);
+            ICartService cartService = new CartService(catalogService, paymentService);
+
             // Show the products from the catalog
-            var catalogService = new CatalogService();
             var products = catalogService.GetAllProducts();
             foreach (var product in products)
             {
@@ -20,7 +35,6 @@ namespace DependencyInjectionDemo
             var input = Console.ReadLine();
 
             // Add the selected product to the cart.
-            var cartService = new CartService();
             if (int.TryParse(input, out int productId))
             {
                 cartService.AddProduct(productId);

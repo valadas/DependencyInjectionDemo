@@ -3,23 +3,19 @@ using Microsoft.Extensions.Configuration;
 
 namespace DependencyInjectionDemo.Services.Payment
 {
-    public class PaymentService
+    public class PaymentService : IPaymentService
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration configuration;
 
-        public PaymentService()
+        public PaymentService(IConfiguration configuration)
         {
-            // Build configuration from appsettings.json
-            _configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .Build();
+            this.configuration = configuration;
         }
 
         public bool ProcessPayment(decimal amount, string creditCardNumber)
         {
             // Get the active payment provider from configuration
-            var activeProviderName = _configuration["PaymentSettings:ActiveProvider"];
+            var activeProviderName = this.configuration["PaymentSettings:ActiveProvider"];
 
             // Get all the payment providers through reflection of types that implement IPaymentProvider
             var paymentProviderTypes = AppDomain.CurrentDomain.GetAssemblies()
@@ -33,7 +29,7 @@ namespace DependencyInjectionDemo.Services.Payment
                 .ToList();
 
             // Find the provider that matches the configured name
-            var paymentProvider = availableProviders.FirstOrDefault(p => 
+            var paymentProvider = availableProviders.FirstOrDefault(p =>
                 p.Name.Equals(activeProviderName, StringComparison.OrdinalIgnoreCase));
 
             if (paymentProvider == null)

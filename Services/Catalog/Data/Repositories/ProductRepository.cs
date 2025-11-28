@@ -2,7 +2,8 @@
 
 namespace DependencyInjectionDemo.Services.Catalog.Data.Repositories
 {
-    internal class ProductRepository
+    /// <inheritdoc cref="IProductRepository"/>
+    internal class ProductRepository : IProductRepository
     {
         private List<Product> products;
 
@@ -16,6 +17,7 @@ namespace DependencyInjectionDemo.Services.Catalog.Data.Repositories
             };
         }
 
+        /// <inheritdoc/>
         public List<Product> GetAllProducts()
         {
             return this.products;
