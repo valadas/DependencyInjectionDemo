@@ -4,6 +4,7 @@ digraph ClassDependencies {
         "DependencyInjectionDemo.Services.Payment.Providers.IPaymentProvider" [label="IPaymentProvider", style="dashed,rounded", fontname="Arial Italic", color="blue", fontcolor="blue"];
     "DependencyInjectionDemo.Services.Catalog.Data.Entiities.Product" [label="Product"];
     "DependencyInjectionDemo.Services.Catalog.Data.ViewModels.ProductViewModel" [label="ProductViewModel"];
+    "DependencyInjectionDemo.Startup" [label="Startup"];
     "DependencyInjectionDemo.Services.Catalog.ICatalogService" [label="ICatalogService", style="dashed,rounded", fontname="Arial Italic", color="blue", fontcolor="blue"];
     "DependencyInjectionDemo.Services.Catalog.CatalogService" [label="CatalogService"];
     "DependencyInjectionDemo.Services.Payment.Providers.PaypalPaymentProvider" [label="PaypalPaymentProvider"];
@@ -23,6 +24,7 @@ digraph ClassDependencies {
     "DependencyInjectionDemo.Services.Cart.CartService" -> "DependencyInjectionDemo.Services.Catalog.ICatalogService";
     "DependencyInjectionDemo.Services.Cart.CartService" -> "DependencyInjectionDemo.Services.Payment.IPaymentService";
     "DependencyInjectionDemo.Services.Payment.PaymentService" -> "DependencyInjectionDemo.Services.Payment.Providers.IPaymentProvider";
+    "DependencyInjectionDemo.Program" -> "DependencyInjectionDemo.Startup";
     "DependencyInjectionDemo.Services.Catalog.CatalogService" -> "DependencyInjectionDemo.Services.Catalog.ICatalogService" [arrowhead="empty", style="dashed"];
     "DependencyInjectionDemo.Services.Payment.Providers.PaypalPaymentProvider" -> "DependencyInjectionDemo.Services.Payment.Providers.IPaymentProvider" [arrowhead="empty", style="dashed"];
     "DependencyInjectionDemo.Services.Catalog.Data.Repositories.ProductRepository" -> "DependencyInjectionDemo.Services.Catalog.Data.Repositories.IProductRepository" [arrowhead="empty", style="dashed"];

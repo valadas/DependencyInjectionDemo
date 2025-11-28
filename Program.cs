@@ -24,10 +24,8 @@ namespace DependencyInjectionDemo
             services.AddSingleton<IConfiguration>(configuration);
             
             // Register application services
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<ICatalogService, CatalogService>();
-            services.AddScoped<IPaymentService, PaymentService>();
-            services.AddScoped<ICartService, CartService>();
+            var startup = new Startup();
+            startup.ConfigureServices(services);
 
             // Build the service provider
             var serviceProvider = services.BuildServiceProvider();
