@@ -5,7 +5,7 @@ using DependencyInjectionDemo.Services.Payment;
 
 namespace DependencyInjectionDemo.Services.Cart
 {
-    public class CartService
+    public class CartService : ICartService
     {
         private readonly ICatalogService catalogService;
         private readonly IPaymentService paymentService;

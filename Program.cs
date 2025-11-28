@@ -21,6 +21,7 @@ namespace DependencyInjectionDemo
             IProductRepository productRepository = new ProductRepository();
             ICatalogService catalogService = new CatalogService(productRepository);
             IPaymentService paymentService = new PaymentService(configuration);
+            ICartService cartService = new CartService(catalogService, paymentService);
 
             // Show the products from the catalog
             var products = catalogService.GetAllProducts();
@@ -34,7 +35,6 @@ namespace DependencyInjectionDemo
             var input = Console.ReadLine();
 
             // Add the selected product to the cart.
-            var cartService = new CartService(catalogService, paymentService);
             if (int.TryParse(input, out int productId))
             {
                 cartService.AddProduct(productId);
