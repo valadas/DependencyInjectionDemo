@@ -1,0 +1,21 @@
+digraph ClassDependencies {
+    rankdir=LR;
+    node [shape=box, style=rounded, fontname="Arial"];
+        "DependencyInjectionDemo.Services.Catalog.Data.ViewModels.ProductViewModel" [label="ProductViewModel"];
+    "DependencyInjectionDemo.Program" [label="Program"];
+    "DependencyInjectionDemo.Services.Catalog.Data.Entiities.Product" [label="Product"];
+    "DependencyInjectionDemo.Services.Payment.PaymentService" [label="PaymentService"];
+    "DependencyInjectionDemo.Services.Catalog.Data.Repositories.ProductRepository" [label="ProductRepository"];
+    "DependencyInjectionDemo.Services.Cart.CartService" [label="CartService"];
+    "DependencyInjectionDemo.Services.Catalog.CatalogService" [label="CatalogService"];
+
+    "DependencyInjectionDemo.Services.Catalog.Data.ViewModels.ProductViewModel" -> "DependencyInjectionDemo.Services.Catalog.Data.Entiities.Product";
+    "DependencyInjectionDemo.Program" -> "DependencyInjectionDemo.Services.Catalog.CatalogService";
+    "DependencyInjectionDemo.Program" -> "DependencyInjectionDemo.Services.Cart.CartService";
+    "DependencyInjectionDemo.Services.Catalog.Data.Repositories.ProductRepository" -> "DependencyInjectionDemo.Services.Catalog.Data.Entiities.Product";
+    "DependencyInjectionDemo.Services.Cart.CartService" -> "DependencyInjectionDemo.Services.Catalog.CatalogService";
+    "DependencyInjectionDemo.Services.Cart.CartService" -> "DependencyInjectionDemo.Services.Payment.PaymentService";
+    "DependencyInjectionDemo.Services.Catalog.CatalogService" -> "DependencyInjectionDemo.Services.Catalog.Data.ViewModels.ProductViewModel";
+    "DependencyInjectionDemo.Services.Catalog.CatalogService" -> "DependencyInjectionDemo.Services.Catalog.Data.Repositories.ProductRepository";
+}
+
