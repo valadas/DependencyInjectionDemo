@@ -8,14 +8,19 @@ namespace DependencyInjectionDemo.Services.Cart
     public class CartService
     {
         private readonly IProductRepository productRepository;
-        
+        private readonly ICatalogService catalogService;
+
         private readonly List<int> productIds;
 
-        public CartService(IProductRepository productRepository)
+        public CartService(
+            IProductRepository productRepository,
+            ICatalogService catalogService)
         {
             this.productRepository = productRepository;
+            this.catalogService = catalogService;
 
             this.productIds = new List<int>();
+            this.catalogService = catalogService;
         }
 
         public void AddProduct(int productId)
@@ -26,8 +31,7 @@ namespace DependencyInjectionDemo.Services.Cart
         public bool Checkout(string creditardNumber)
         {
             // Get the total amount from the products in the cart.
-            var catalogService = new CatalogService(this.productRepository);
-            var products = catalogService.GetAllProducts()
+            var products = this.catalogService.GetAllProducts()
                 .Where(p => this.productIds.Contains(p.Id))
                 .ToList();
             decimal totalAmount = products.Sum(p => p.Price);

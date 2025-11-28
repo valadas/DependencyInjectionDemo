@@ -10,9 +10,9 @@ namespace DependencyInjectionDemo
         {
             // Dependencies
             IProductRepository productRepository = new ProductRepository();
+            ICatalogService catalogService = new CatalogService(productRepository);
 
             // Show the products from the catalog
-            var catalogService = new CatalogService(productRepository);
             var products = catalogService.GetAllProducts();
             foreach (var product in products)
             {
@@ -24,7 +24,7 @@ namespace DependencyInjectionDemo
             var input = Console.ReadLine();
 
             // Add the selected product to the cart.
-            var cartService = new CartService(productRepository);
+            var cartService = new CartService(productRepository, catalogService);
             if (int.TryParse(input, out int productId))
             {
                 cartService.AddProduct(productId);
