@@ -1,6 +1,7 @@
 ﻿using DependencyInjectionDemo.Services.Cart;
 using DependencyInjectionDemo.Services.Catalog;
 using DependencyInjectionDemo.Services.Catalog.Data.Repositories;
+using DependencyInjectionDemo.Services.Payment;
 
 namespace DependencyInjectionDemo
 {
@@ -11,6 +12,7 @@ namespace DependencyInjectionDemo
             // Dependencies
             IProductRepository productRepository = new ProductRepository();
             ICatalogService catalogService = new CatalogService(productRepository);
+            IPaymentService paymentService = new PaymentService();
 
             // Show the products from the catalog
             var products = catalogService.GetAllProducts();
@@ -24,7 +26,7 @@ namespace DependencyInjectionDemo
             var input = Console.ReadLine();
 
             // Add the selected product to the cart.
-            var cartService = new CartService(productRepository, catalogService);
+            var cartService = new CartService(catalogService, paymentService);
             if (int.TryParse(input, out int productId))
             {
                 cartService.AddProduct(productId);

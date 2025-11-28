@@ -7,20 +7,19 @@ namespace DependencyInjectionDemo.Services.Cart
 {
     public class CartService
     {
-        private readonly IProductRepository productRepository;
         private readonly ICatalogService catalogService;
+        private readonly IPaymentService paymentService;
 
         private readonly List<int> productIds;
 
         public CartService(
-            IProductRepository productRepository,
-            ICatalogService catalogService)
+            ICatalogService catalogService,
+            IPaymentService paymentService)
         {
-            this.productRepository = productRepository;
             this.catalogService = catalogService;
+            this.paymentService = paymentService;
 
             this.productIds = new List<int>();
-            this.catalogService = catalogService;
         }
 
         public void AddProduct(int productId)
@@ -36,7 +35,6 @@ namespace DependencyInjectionDemo.Services.Cart
                 .ToList();
             decimal totalAmount = products.Sum(p => p.Price);
 
-            var paymentService = new PaymentService();
             var success = paymentService.ProcessPayment(totalAmount, creditardNumber);
 
             return success;

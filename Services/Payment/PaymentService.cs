@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace DependencyInjectionDemo.Services.Payment
 {
-    public class PaymentService
+    public class PaymentService : IPaymentService
     {
         private readonly IConfiguration _configuration;
 
@@ -33,7 +33,7 @@ namespace DependencyInjectionDemo.Services.Payment
                 .ToList();
 
             // Find the provider that matches the configured name
-            var paymentProvider = availableProviders.FirstOrDefault(p => 
+            var paymentProvider = availableProviders.FirstOrDefault(p =>
                 p.Name.Equals(activeProviderName, StringComparison.OrdinalIgnoreCase));
 
             if (paymentProvider == null)
