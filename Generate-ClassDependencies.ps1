@@ -5,7 +5,9 @@ param(
 )
 
 $classes = @{}
+$interfaces = @{}
 $dependencies = @{}
+$inheritances = @{}
 $builtInTypes = @('string', 'int', 'bool', 'double', 'float', 'decimal', 'long', 'short', 'byte', 'char', 'object', 'void', 'var')
 
 # Find all C# files
@@ -20,12 +22,34 @@ Get-ChildItem -Path $ProjectPath -Filter "*.cs" -Recurse |
             $namespace = $Matches[1]
         }
         
+        # Check for interface
+        if ($content -match 'interface\s+(\w+)') {
+            $interfaceName = $Matches[1]
+            $fullInterfaceName = "$namespace.$interfaceName"
+            $interfaces[$fullInterfaceName] = $true
+            $classes[$fullInterfaceName] = $true
+            $dependencies[$fullInterfaceName] = [System.Collections.Generic.HashSet[string]]::new()
+            $inheritances[$fullInterfaceName] = [System.Collections.Generic.HashSet[string]]::new()
+            
+            # Find base interfaces
+            if ($content -match 'interface\s+' + $interfaceName + '\s*:\s*([^{]+)') {
+                $baseInterfaces = $Matches[1] -split ','
+                foreach ($baseInterface in $baseInterfaces) {
+                    $trimmed = $baseInterface.Trim()
+                    if ($trimmed -and $trimmed -notin $builtInTypes) {
+                        [void]$inheritances[$fullInterfaceName].Add($trimmed)
+                    }
+                }
+            }
+        }
+        
         # Extract class name
         if ($content -match 'class\s+(\w+)') {
             $className = $Matches[1]
             $fullClassName = "$namespace.$className"
             $classes[$fullClassName] = $true
             $dependencies[$fullClassName] = [System.Collections.Generic.HashSet[string]]::new()
+            $inheritances[$fullClassName] = [System.Collections.Generic.HashSet[string]]::new()
             
             # Find constructor parameters
             if ($content -match 'public\s+' + $className + '\s*\(([^)]*)\)') {
@@ -92,6 +116,26 @@ Get-ChildItem -Path $ProjectPath -Filter "*.cs" -Recurse |
                     [void]$dependencies[$fullClassName].Add($newType)
                 }
             }
+            
+            # Find typeof() usage (e.g., typeof(IPaymentProvider))
+            $typeofMatches = [regex]::Matches($content, 'typeof\s*\(\s*(\w+)\s*\)')
+            foreach ($match in $typeofMatches) {
+                $typeofType = $match.Groups[1].Value
+                if ($typeofType -notin $builtInTypes -and $typeofType -ne $className) {
+                    [void]$dependencies[$fullClassName].Add($typeofType)
+                }
+            }
+            
+            # Find implemented interfaces (e.g., class Foo : IFoo, IBar)
+            if ($content -match 'class\s+' + $className + '\s*:\s*([^{]+)') {
+                $baseTypes = $Matches[1] -split ','
+                foreach ($baseType in $baseTypes) {
+                    $trimmed = $baseType.Trim()
+                    if ($trimmed -and $trimmed -notin $builtInTypes) {
+                        [void]$inheritances[$fullClassName].Add($trimmed)
+                    }
+                }
+            }
         }
     }
 
@@ -104,20 +148,37 @@ digraph ClassDependencies {
 "@
 
 # Add nodes
-foreach ($class in $classes.Keys) {
-    $simpleName = $class.Split('.')[-1]
-    $dot += "    `"$class`" [label=`"$simpleName`"];`n"
+foreach ($className in $classes.Keys) {
+    $simpleName = $className.Split('.')[-1]
+    if ($interfaces.ContainsKey($className)) {
+        # Interface style: dashed border, italic text, lighter color
+        $dot += "    `"$className`" [label=`"$simpleName`", style=`"dashed,rounded`", fontname=`"Arial Italic`", color=`"blue`", fontcolor=`"blue`"];`n"
+    } else {
+        # Regular class style
+        $dot += "    `"$className`" [label=`"$simpleName`"];`n"
+    }
 }
 
 $dot += "`n"
 
-# Add edges
+# Add dependency edges (regular arrows)
 foreach ($class in $dependencies.Keys) {
     foreach ($dep in $dependencies[$class]) {
         # Try to find full class name for dependency
         $fullDep = $classes.Keys | Where-Object { $_ -match "\.$dep$" } | Select-Object -First 1
         if ($fullDep) {
             $dot += "    `"$class`" -> `"$fullDep`";`n"
+        }
+    }
+}
+
+# Add inheritance/implementation edges (hollow arrow heads)
+foreach ($class in $inheritances.Keys) {
+    foreach ($inherited in $inheritances[$class]) {
+        # Try to find full class name for inherited type
+        $fullInherited = $classes.Keys | Where-Object { $_ -match "\.$inherited$" -or $_ -eq $inherited } | Select-Object -First 1
+        if ($fullInherited) {
+            $dot += "    `"$class`" -> `"$fullInherited`" [arrowhead=`"empty`", style=`"dashed`"];`n"
         }
     }
 }
